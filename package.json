@@ -37,7 +37,7 @@
 		"url": "git+https://github.com/grMLEqomlkkU5Eeinz4brIrOVCUCkJuN/lib-template.git"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^21.0.2",
+		"@commitlint/cli": "^21.2.1",
 		"@commitlint/config-conventional": "^21.0.2",
 		"@eslint/js": "^10.0.1",
 		"@types/node": "^25.9.3",
