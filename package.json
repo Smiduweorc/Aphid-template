@@ -37,16 +37,16 @@
 		"url": "git+https://github.com/grMLEqomlkkU5Eeinz4brIrOVCUCkJuN/lib-template.git"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^21.0.2",
-		"@commitlint/config-conventional": "^21.0.2",
+		"@commitlint/cli": "^21.2.2",
+		"@commitlint/config-conventional": "^21.2.2",
 		"@eslint/js": "^10.0.1",
-		"@types/node": "^25.9.3",
-		"eslint": "^10.5.0",
-		"git-cliff": "^2.10.1",
-		"lefthook": "^2.1.9",
-		"tsx": "^4.21.0",
-		"typedoc": "^0.28.14",
-		"typescript": "^6.0.2",
-		"typescript-eslint": "^8.61.1"
+		"@types/node": "^25.9.5",
+		"eslint": "^10.8.1",
+		"git-cliff": "^2.13.1",
+		"lefthook": "^2.1.10",
+		"tsx": "^4.23.12",
+		"typedoc": "^0.28.20",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.67.0"
 	}
 }
