@@ -1,0 +1,52 @@
+{
+	"name": "@grml/lib-template",
+	"version": "0.0.0",
+	"description": "ESM-friendly TypeScript library template.",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/types/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/types/index.d.ts",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsc",
+		"typecheck": "tsc --noEmit && tsc --noEmit -p tests/tsconfig.json",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"test": "node --import tsx --test \"tests/**/*.test.ts\"",
+		"docs": "typedoc",
+		"changelog": "git-cliff -o CHANGELOG.md",
+		"prepare": "lefthook install"
+	},
+	"keywords": [
+		"typescript",
+		"esm",
+		"template",
+		"library"
+	],
+	"author": "",
+	"license": "ISC",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/grMLEqomlkkU5Eeinz4brIrOVCUCkJuN/lib-template.git"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^21.0.2",
+		"@commitlint/config-conventional": "^21.0.2",
+		"@eslint/js": "^10.0.1",
+		"@types/node": "^25.9.3",
+		"eslint": "^10.5.0",
+		"git-cliff": "^2.10.1",
+		"lefthook": "^2.1.9",
+		"tsx": "^4.21.0",
+		"typedoc": "^0.28.14",
+		"typescript": "^6.0.2",
+		"typescript-eslint": "^8.61.1"
+	}
+}
