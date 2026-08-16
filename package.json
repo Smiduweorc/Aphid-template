@@ -44,7 +44,7 @@
 		"eslint": "^10.5.0",
 		"git-cliff": "^2.10.1",
 		"lefthook": "^2.1.9",
-		"tsx": "^4.21.0",
+		"tsx": "^4.23.12",
 		"typedoc": "^0.28.14",
 		"typescript": "^6.0.2",
 		"typescript-eslint": "^8.61.1"
