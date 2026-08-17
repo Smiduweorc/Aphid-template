@@ -159,30 +159,73 @@ package excludes goes in a wrapper around that function, where it applies to
 every call and stays under the consumer's control:
 
 ```ts
-const withRetry = (inner: Transport, attempts: number): Transport =>
-	async (request) => {
-		for (let attempt = 1; ; attempt += 1) {
-			try {
-				return await inner(request);
-			} catch (error) {
-				if (attempt >= attempts) throw error;
-				await sleep(2 ** attempt * 100);
-			}
-		}
-	};
+const withLogging = (inner: Transport): Transport => async (request) => {
+	const started = performance.now();
+	const response = await inner(request);
+	console.log(request.method, request.url, response.status, performance.now() - started);
+
+	return response;
+};
 
 const api = new ApiClient({
 	baseUrl: "https://api.example.com/v1",
-	transport: withRetry(fetch, 3),
+	transport: withLogging(fetch),
 });
 ```
 
-A transport that retries a request with a body must clone it first: a `Request`
-body can only be read once.
+Logging stays yours because everyone wants a different shape, and because a
+library that writes to stdout has taken something that belongs to the
+application. A hand-written decorator that retries a request with a body must
+clone it first: a `Request` body reads once.
 
-Authentication is a header, so a static key or token goes in the client's
-`headers`. A credential that has to be refreshed belongs in a transport
-decorator, which can set the header per attempt.
+### The decorators that ship
+
+Two of the excluded behaviours are written anyway, under the `/transport`
+subpath, because they are the two people rewrite and get subtly wrong.
+Importing the package costs nothing unless you import the subpath, and
+`ApiClient` is untouched either way: a decorator is a `Transport` wrapped
+around another, which you construct and pass in.
+
+```ts
+import { ApiClient } from "@Smiduweorc/AphidTemplate";
+import { withBearerToken, withRetry } from "@Smiduweorc/AphidTemplate/transport";
+
+const api = new ApiClient({
+	baseUrl: "https://api.example.com/v1",
+	transport: withRetry(withBearerToken(fetch, () => tokens.current())),
+});
+```
+
+**`withBearerToken(inner, getToken)`** sends `authorization: Bearer <token>` on
+every request and asks your function for the value each time, so caching and
+expiry stay yours. Concurrent requests share one call to it: ten requests
+arriving on an expired token ask for one token rather than ten. The shared
+promise is dropped as soon as it settles, so the next request asks again. Your
+function returns the token rather than the header value, and a rejection
+reaches the caller as a `TransportError` having cached nothing.
+
+A static key or token needs none of that. Put it in the client's `headers` and
+it is sent with every request.
+
+**`withRetry(inner, options)`** sends a request again when it failed in a way
+that might not fail twice: a rejected transport, or a 408, 425, 429, 500, 502,
+503 or 504. Waits double from 200ms to a 5s ceiling and are jittered across the
+whole window, so a fleet that failed together does not come back together. A
+`Retry-After` is honoured, and one asking for longer than `maxDelay` ends the
+retrying rather than arriving early.
+
+It leaves two things alone. A request the caller aborted, because that failure
+is the caller's own doing. And `POST` and `PATCH`, because a `POST` that was
+received and answered into a dropped connection has already happened, and
+sending it again charges the card twice. An API that takes idempotency keys
+opts its writes in with `methods: ["POST"]`.
+
+Every attempt sends its own clone, since a `Request` body reads once. Ordering
+matters in one way: `withRetry(withBearerToken(...))`, as above, asks for a
+token per attempt, so a retry after an expiry carries a fresh one.
+
+A copy of this template that wants neither deletes `src/transport/`, the same
+way it deletes `src/resources/example.ts`.
 
 ## Getting started from this template
 
@@ -218,6 +261,10 @@ decorator, which can set the header per attempt.
 │   ├── errors.ts               # ApiError and its three subclasses
 │   ├── decode.ts               # readJson
 │   ├── url.ts                  # internal URL and query building
+│   ├── transport/
+│   │   ├── index.ts            # the <package>/transport subpath
+│   │   ├── bearer.ts           # withBearerToken
+│   │   └── retry.ts            # withRetry
 │   └── resources/
 │       └── example.ts          # one worked resource; copy it, then delete it
 ├── tests/
