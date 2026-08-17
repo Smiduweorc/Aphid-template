@@ -54,3 +54,10 @@ test("errors thrown by the built artifact are catchable by type", async () => {
 	assert.ok(error instanceof pkg.ApiError);
 	assert.equal(error.status, 500);
 });
+
+test("the transport subpath is published and exports its decorators", async () => {
+	const transport = await import("../../dist/src/transport/index.js");
+
+	assert.deepEqual(Object.keys(transport).sort(), ["withBearerToken", "withRetry"]);
+	await access(new URL("../../dist/types/src/transport/index.d.ts", import.meta.url));
+});
