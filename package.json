@@ -50,7 +50,7 @@
 		"@types/node": "^26.5.1",
 		"eslint": "^10.10.0",
 		"git-cliff": "^2.13.1",
-		"lefthook": "^2.1.12",
+		"lefthook": "^2.1.14",
 		"tsx": "^4.23.13",
 		"typedoc": "^0.28.20",
 		"typescript": "^6.0.3",
