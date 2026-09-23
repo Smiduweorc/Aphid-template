@@ -44,7 +44,7 @@
 		"url": "git+https://github.com/Smiduweorc/Aphid-template"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^21.2.2",
+		"@commitlint/cli": "^21.2.3",
 		"@commitlint/config-conventional": "^21.2.3",
 		"@eslint/js": "^10.0.1",
 		"@types/node": "^26.6.2",
